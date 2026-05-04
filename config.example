@@ -48,3 +48,10 @@
 # Dedicated last oasis server steam appid for linux. (Default: "903950")
 # STEAM_LINUX_APP_ID="903950"
 
+# Where backups created by the `backup` command are written.
+# (Default: "$INSTALL_DIR/backups")
+# BACKUP_DIR="/path/to/backups"
+
+# Host directory used by `last-oasis-docker backup`. (Default: "$(pwd)/backups")
+# HOST_BACKUP_DIR="/path/to/backups"
+

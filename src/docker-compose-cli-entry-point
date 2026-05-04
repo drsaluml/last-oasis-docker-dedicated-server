@@ -59,6 +59,14 @@ case $CMD in
     INFO="DOWN"
     docker_compose "down"
     ;;
+  logs)
+    INFO="LOGS"
+    docker_compose "logs --tail=200 -f"
+    ;;
+  backup)
+    INFO="BACKUP"
+    docker_compose_maintenance "backup"
+    ;;
   help)
     show_help
     ;;

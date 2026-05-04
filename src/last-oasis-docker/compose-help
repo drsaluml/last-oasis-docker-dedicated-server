@@ -26,7 +26,8 @@ ${bold}COMMANDS
   update      Update Last Oasis
   up          Start all the servers
   down        Stop all the servers
-  run         Run and start a server in foreground
+  logs        Tail combined logs from all compose services
+  backup      Create a tarball of save data via the maintenance service
 
 ${bold}ENVIRONMENT VARIABLES:
   ${normal}The following environment variables are available:
@@ -48,7 +49,7 @@ ${bold}EXAMPLES
   last-oasis-compose up
 
   # Stop all running Last Oasis servers
-  last-oasis-compose up
+  last-oasis-compose down
 
 ${bold}NOTE
   ${normal}Configuration of your realm and oasis must be done at: https://myrealm.lastoasis.gg/.

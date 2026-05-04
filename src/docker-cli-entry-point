@@ -60,6 +60,14 @@ case $CMD in
     INFO="RUN"
     docker_run "run"
     ;;
+  backup)
+    INFO="BACKUP"
+    docker_backup
+    ;;
+  logs)
+    INFO="LOGS"
+    docker_logs
+    ;;
   help)
     show_help
     ;;

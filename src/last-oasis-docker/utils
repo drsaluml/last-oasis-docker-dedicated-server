@@ -42,3 +42,25 @@ docker_compose_maintenance(){
 docker_compose(){
   run "docker-compose $1"
 }
+
+docker_backup(){
+  HOST_BACKUP_DIR="${HOST_BACKUP_DIR:-$(pwd)/backups}"
+  run "mkdir -p '$HOST_BACKUP_DIR'"
+  run "docker run \
+    --rm \
+    -v $DOCKER_VOLUME:/mnt/steam/ \
+    -v '$HOST_BACKUP_DIR':/backups \
+    -e BACKUP_DIR=/backups \
+    $DOCKER_IMAGE \
+    backup"
+}
+
+docker_logs(){
+  LOG_PATH="/mnt/steam/last-oasis/Mist/Saved/Logs/Mist.log"
+  run "docker run \
+    --rm \
+    -v $DOCKER_VOLUME:/mnt/steam/ \
+    --entrypoint /bin/sh \
+    $DOCKER_IMAGE \
+    -c 'test -f $LOG_PATH && tail -n 200 $LOG_PATH || echo \"[ERROR] Log file not found at $LOG_PATH\"'"
+}

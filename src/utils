@@ -24,13 +24,12 @@ provide_linux_app_id(){
 
 # Start a single server
 start_server(){
+  if [ -n "$SERVER_SLOTS" ] && [ "$SERVER_SLOTS" -gt 100 ] 2>/dev/null; then
+    echo "[WARNING] SERVER_SLOTS=$SERVER_SLOTS exceeds the recommended max of 100"
+  fi
+
   run "${SERVER_BINARY_PATH}MistServer-Linux-Shipping \
-    -log \
-    -force_steamclient_link \
-    -messaging \
-    -NoLiveServer \
-    -EnableCheats \
-    -backendapiurloverride="backend.last-oasis.com" \
+    $SERVER_OPTIONS \
     -identifier=$SERVER_IDENTIFIER \
     -port=$SERVER_PORT \
     -QueryPort=$SERVER_QUERY_PORT \
@@ -38,6 +37,25 @@ start_server(){
     -ProviderKey=$SERVER_PROVIDER_KEY \
     -slots=$SERVER_SLOTS \
     -OverrideConnectionAddress=$SERVER_IP_ADDRESS"
+}
+
+# Backup save data to a tarball
+backup_saves(){
+  info "Backup save data"
+
+  BACKUP_DIR="${BACKUP_DIR:-$INSTALL_DIR/backups}"
+  SAVED_DIR="$INSTALL_DIR/Mist/Saved"
+  TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+  BACKUP_FILE="$BACKUP_DIR/last-oasis-saves-$TIMESTAMP.tar.gz"
+
+  if [ ! -d "$SAVED_DIR" ]; then
+    echo "[ERROR] Save directory not found: $SAVED_DIR"
+    exit 1
+  fi
+
+  run "mkdir -p '$BACKUP_DIR'"
+  run "tar -czf '$BACKUP_FILE' -C '$INSTALL_DIR/Mist' Saved"
+  echo "[BACKUP] Saved to $BACKUP_FILE"
 }
 
 # Show formatted info

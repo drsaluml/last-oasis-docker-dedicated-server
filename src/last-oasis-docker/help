@@ -25,6 +25,8 @@ ${bold}COMMANDS
   update      Update Last Oasis
   debug       Open a shell (bash) within the container
   run         Run and start a server in foreground
+  backup      Create a tarball of save data into ./backups (override with HOST_BACKUP_DIR)
+  logs        Tail the latest entries from Mist.log inside the volume
 
 ${bold}ENVIRONMENT VARIABLES:
   ${normal}The following environment variables are available:

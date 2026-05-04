@@ -18,10 +18,13 @@ RUN adduser \
     --uid "$UID" \
     "$USER"
 
-RUN apt update -y
-RUN apt install -y \
-  curl \
-  lib32gcc1
+RUN apt-get update -y \
+ && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      curl \
+      lib32gcc-s1 \
+      python3-minimal \
+ && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /mnt/steam
 RUN chown -R steam:steam /mnt/steam/
@@ -42,6 +45,9 @@ RUN curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.t
 RUN ./steamcmd.sh --help
 
 COPY --chown=steam ./ ./
+
+HEALTHCHECK --interval=60s --timeout=10s --start-period=180s --retries=3 \
+  CMD python3 /home/steam/src/healthcheck || exit 1
 
 ENTRYPOINT ["/home/steam/last-oasis"]
 CMD ["help"]

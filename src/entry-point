@@ -9,7 +9,7 @@ show_help() {
   source "$CURRENT_DIR/help"
 }
 
-while getopts ":c:d:h:i:k:n:o:p:q:s:u" option; do
+while getopts ":c:d:hi:k:n:o:p:P:q:s:u:" option; do
   case $option in
     c)
       SERVER_CUSTOMER_KEY=${OPTARG};;
@@ -28,6 +28,8 @@ while getopts ":c:d:h:i:k:n:o:p:q:s:u" option; do
       SERVER_OPTIONS=${OPTARG};;
     p)
       SERVER_PORT=${OPTARG};;
+    P)
+      SERVER_PROVIDER_KEY=${OPTARG};;
     q)
       SERVER_QUERY_PORT=${OPTARG};;
     s)
@@ -62,6 +64,10 @@ case $CMD in
   run)
     INFO="RUN"
     start_server
+    ;;
+  backup)
+    INFO="BACKUP"
+    backup_saves
     ;;
   help)
     show_help

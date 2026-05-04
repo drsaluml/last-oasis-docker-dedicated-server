@@ -13,13 +13,17 @@ ${bold}USAGE
 ${bold}OPTIONS
   ${normal}The following options are available:
 
+  -c <key>    Server customer key
   -d          Directory to use/install Last Oasis from/to
   -h          Show this help screen
   -i <IP>     External IP
+  -k <key>    Server customer key (alias of -c)
   -n <name>   Server name / identifier
+  -o <opts>   Override default server options
   -p <port>   Port to use
+  -P <key>    Server provider key
   -q <port>   Query port to use
-  -s <slots>  Server slots
+  -s <slots>  Server slots (max recommended: 100)
   -u <user>   Steam username / login
 
 ${bold}COMMANDS
@@ -30,6 +34,7 @@ ${bold}COMMANDS
   install     Download and install Last Oasis
   update      Update Last Oasis
   run         Run and start a server in foreground
+  backup      Create a tarball of the save data (Mist/Saved)
 
 ${bold}ENVIRONMENT VARIABLES: (@todo)
   ${normal}A lot of internals can be controlled with specific environment variables.

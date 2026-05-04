@@ -51,6 +51,10 @@ x-service-template: &service-template
   restart: always
   command: run
   stop_grace_period: 60s
+  # steamcmd uses syscalls that Docker's default seccomp profile blocks
+  # on some kernels — produces "CreateBoundSocket: failed ... (38)".
+  security_opt:
+    - seccomp:unconfined
   volumes:
     - "last-oasis-volume:/mnt/steam/"
   healthcheck:

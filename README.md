@@ -5,7 +5,36 @@
 This repo might help you to run dedicated servers for [Last Oasis](https://lastoasis.gg/) on Linux and/or with docker.\
 You should bring basic knowledge of Linux CLI in order to utilize what we got here.
 
-## Installation
+## Quick start — single compose file (no git clone)
+
+If you just want to run **one server** on a small host, you only need
+the [`docker-compose.yml.single-server`](docker-compose.yml.single-server)
+file — Docker pulls everything else from GHCR.
+
+```shell
+# 1. Grab the compose file
+curl -fLO https://raw.githubusercontent.com/drsaluml/last-oasis-docker-dedicated-server/main/docker-compose.yml.single-server
+mv docker-compose.yml.single-server docker-compose.yml
+
+# 2. Edit the placeholders (CUSTOMER_KEY, PROVIDER_KEY, EXTERNAL_IP, SERVER_NAME)
+nano docker-compose.yml
+
+# 3. Download game files into the named volume (anonymous, no 2FA)
+docker compose run --rm maintenance install
+
+# 4. Start the server
+docker compose up -d
+
+# Day-to-day
+docker compose ps                       # health status
+docker compose logs -f server-01        # tail server logs
+docker compose down                     # stop
+```
+
+The compose file is self-documenting — every command (update, backup,
+shell) is listed in its header comment.
+
+## Installation (full repo, for development or multi-server)
 
 Download this repository either via git:
 

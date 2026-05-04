@@ -3,11 +3,38 @@
 # Sized for: 4 vCPU / 6 GB RAM / 60 GB SSD / 400 Mbps shared
 # Target capacity: 25 player slots (room to grow to ~30 if stable)
 #
-# Usage:
-#   cp docker-compose.yml.single-server docker-compose.yml
-#   # edit docker-compose.yml and replace every <REPLACE_*> placeholder
-#   ./last-oasis-compose install  # download game files into the volume (anonymous)
-#   ./last-oasis-compose up       # start the server
+# This file is self-contained — drop it on a host with Docker installed
+# and you can run everything from `docker compose`. No git clone needed.
+#
+# ─── First-time setup ──────────────────────────────────────────────────
+#   1. curl -O https://raw.githubusercontent.com/drsaluml/last-oasis-docker-dedicated-server/main/docker-compose.yml.single-server
+#   2. mv docker-compose.yml.single-server docker-compose.yml
+#   3. Edit docker-compose.yml — replace every <REPLACE_*> placeholder.
+#   4. docker compose run --rm maintenance install
+#   5. docker compose up -d
+#
+# ─── Day-to-day commands ───────────────────────────────────────────────
+#   Start server      : docker compose up -d
+#   Stop server       : docker compose down
+#   Tail logs         : docker compose logs -f server-01
+#   Health status     : docker compose ps
+#   Restart server    : docker compose restart server-01
+#
+# ─── Maintenance commands ──────────────────────────────────────────────
+#   Update game files : docker compose down \
+#                       && docker compose pull \
+#                       && docker compose run --rm maintenance update \
+#                       && docker compose up -d
+#   Backup save data  : docker compose run --rm \
+#                         -v "$PWD/backups:/backups" \
+#                         -e BACKUP_DIR=/backups \
+#                         maintenance backup
+#   Open shell        : docker compose run --rm --entrypoint bash maintenance
+#
+# ─── Notes ─────────────────────────────────────────────────────────────
+#   - The image pulls anonymously when STEAM_USER is unset (default).
+#   - Save data lives in the named volume `last-oasis-volume`.
+#   - Open ports 62001/tcp+udp (game) and 27015/tcp+udp (Steam query).
 
 x-environment-template: &environment-template
   SERVER_CUSTOMER_KEY: "<REPLACE_CUSTOMER_KEY>"

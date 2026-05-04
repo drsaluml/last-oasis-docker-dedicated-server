@@ -1,0 +1,66 @@
+# Last Oasis dedicated server — single map / single server
+#
+# Sized for: 4 vCPU / 6 GB RAM / 60 GB SSD / 400 Mbps shared
+# Target capacity: 25 player slots (room to grow to ~30 if stable)
+#
+# Usage:
+#   cp docker-compose.yml.single-server docker-compose.yml
+#   # edit docker-compose.yml and replace every <REPLACE_*> placeholder
+#   ./last-oasis-compose login    # one-time Steam auth (2FA)
+#   ./last-oasis-compose install  # download game files into the volume
+#   ./last-oasis-compose up       # start the server
+
+x-environment-template: &environment-template
+  SERVER_CUSTOMER_KEY: "<REPLACE_CUSTOMER_KEY>"
+  SERVER_PROVIDER_KEY: "<REPLACE_PROVIDER_KEY>"
+  SERVER_IP_ADDRESS:   "<REPLACE_EXTERNAL_IP>"
+  STEAM_USER:          "<REPLACE_STEAM_USERNAME>"
+
+x-service-template: &service-template
+  # Use the published image. Switch to `build: .` to build locally instead.
+  image: ghcr.io/drsaluml/last-oasis-docker-dedicated-server:latest
+  restart: always
+  command: run
+  stop_grace_period: 60s
+  volumes:
+    - "last-oasis-volume:/mnt/steam/"
+  healthcheck:
+    test: ["CMD", "python3", "/home/steam/src/healthcheck"]
+    interval: 60s
+    timeout: 10s
+    start_period: 180s
+    retries: 3
+
+services:
+  # Maintenance container — used for install / update / login / backup.
+  # Does not run a server; healthcheck disabled.
+  maintenance:
+    <<: *service-template
+    restart: "no"
+    command: help
+    healthcheck:
+      disable: true
+    environment:
+      <<: *environment-template
+
+  # Single map server — 25 slots, capped at 3 CPU / 4 GB RAM
+  server-01:
+    <<: *service-template
+    container_name: last-oasis-server-01
+    cpus: 3.0
+    mem_limit: 4g
+    mem_reservation: 2g
+    ports:
+      - "62001:62001/tcp"
+      - "62001:62001/udp"
+      - "27015:27015/tcp"
+      - "27015:27015/udp"
+    environment:
+      <<: *environment-template
+      SERVER_IDENTIFIER: "<REPLACE_SERVER_NAME>"
+      SERVER_PORT:       62001
+      SERVER_QUERY_PORT: 27015
+      SERVER_SLOTS:      25
+
+volumes:
+  last-oasis-volume:

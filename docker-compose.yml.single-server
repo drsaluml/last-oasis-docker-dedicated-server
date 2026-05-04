@@ -76,13 +76,10 @@ services:
     environment:
       <<: *environment-template
 
-  # Single map server — 25 slots, capped at 3 CPU / 4 GB RAM
+  # Single map server — 25 slots
   server-01:
     <<: *service-template
     container_name: last-oasis-server-01
-    cpus: 3.0
-    mem_limit: 4g
-    mem_reservation: 2g
     ports:
       - "62001:62001/tcp"
       - "62001:62001/udp"

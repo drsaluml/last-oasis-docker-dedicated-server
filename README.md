@@ -360,8 +360,6 @@ required — `STEAM_USER` defaults to `anonymous`.
 The template is pre-tuned to:
 
 - `SERVER_SLOTS: 25` (raise to 30–35 once stable)
-- `cpus: 3.0` (leaves 1 core for the host OS)
-- `mem_limit: 4g` / `mem_reservation: 2g` (leaves ~2 GB for the host)
 - Ports: `62001/tcp+udp` (game) and `27015/tcp+udp` (Steam query)
 
 Make sure those ports are open on your firewall / router.

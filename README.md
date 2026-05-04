@@ -206,14 +206,24 @@ Tags follow [SemVer](https://semver.org/) (e.g. `1.2.3`, `1.2`, `latest`).
 
 #### Configure
 
-Copy the example `docker-copose` file and adjust it to your needs:
+Two templates ship with the repo — pick whichever matches your host:
+
+| Template | Use when |
+|---|---|
+| [`docker-compose.yml.single-server`](docker-compose.yml.single-server) | Running a **single map** on a small box (~4 vCPU / 6 GB RAM). Pre-tuned to 25 slots with CPU and memory caps. |
+| [`docker-compose.yml.example`](docker-compose.yml.example) | Running **multiple maps** or you want to start from a multi-server skeleton. |
+
+Copy the chosen template to `docker-compose.yml` and edit the placeholders:
 
 ```shell
-# Get repo (@see Installation)
+# Single-server (small host)
+cp docker-compose.yml.single-server docker-compose.yml
+
+# Multi-server (custom layout)
 cp docker-compose.yml.example docker-compose.yml
 ```
 
-**NOTE** Do NOT copy the `config.example` as this would overwrite your individual server configuration!
+**NOTE** Do NOT copy `config.example` to `config` here — it would overwrite the per-service `environment:` block on each `compose run`.
 
 It should look close to:
 
@@ -289,6 +299,33 @@ It should look close to:
     volumes:
       last-oasis-volume:
 </details>
+
+##### Single-server quick start (small host)
+
+For a host sized around **4 vCPU / 6 GB RAM / 60 GB SSD / 400 Mbps**:
+
+```shell
+cp docker-compose.yml.single-server docker-compose.yml
+```
+
+Then open `docker-compose.yml` and replace every `<REPLACE_*>` placeholder:
+
+| Placeholder | Where to get it |
+|---|---|
+| `<REPLACE_CUSTOMER_KEY>` | myrealm.lastoasis.gg → Settings → "Game server registration key" |
+| `<REPLACE_PROVIDER_KEY>` | myrealm.lastoasis.gg → Settings → "Self hosted game servers registration keys" |
+| `<REPLACE_EXTERNAL_IP>` | Public IPv4 of your host |
+| `<REPLACE_STEAM_USERNAME>` | Steam account that owns Last Oasis |
+| `<REPLACE_SERVER_NAME>` | Anything unique within the realm (e.g. `oasis-01`) |
+
+The template is pre-tuned to:
+
+- `SERVER_SLOTS: 25` (raise to 30–35 once stable)
+- `cpus: 3.0` (leaves 1 core for the host OS)
+- `mem_limit: 4g` / `mem_reservation: 2g` (leaves ~2 GB for the host)
+- Ports: `62001/tcp+udp` (game) and `27015/tcp+udp` (Steam query)
+
+Make sure those ports are open on your firewall / router.
 
 #### Install
 

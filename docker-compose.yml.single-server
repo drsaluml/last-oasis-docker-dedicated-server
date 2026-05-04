@@ -40,6 +40,7 @@ x-environment-template: &environment-template
   SERVER_CUSTOMER_KEY: "<REPLACE_CUSTOMER_KEY>"
   SERVER_PROVIDER_KEY: "<REPLACE_PROVIDER_KEY>"
   SERVER_IP_ADDRESS:   "<REPLACE_EXTERNAL_IP>"
+  SERVER_IDENTIFIER:   "<REPLACE_SERVER_NAME>"
   # STEAM_USER defaults to "anonymous"; override only if you must use
   # a personal Steam account.
   # STEAM_USER:        "<your-steam-username>"
@@ -85,7 +86,6 @@ services:
       - "27015:27015/udp"
     environment:
       <<: *environment-template
-      SERVER_IDENTIFIER: "<REPLACE_SERVER_NAME>"
       SERVER_PORT:       62001
       SERVER_QUERY_PORT: 27015
       SERVER_SLOTS:      25

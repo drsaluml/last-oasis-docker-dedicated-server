@@ -9,8 +9,8 @@ download(){
   info "Download Last Oasis"
 
   run "$STEAM_CMD_BINARY \
-    +login $STEAM_USER \
     +force_install_dir $INSTALL_DIR \
+    +login $STEAM_USER \
     +app_update $STEAM_APP_ID validate \
     +quit"
 }

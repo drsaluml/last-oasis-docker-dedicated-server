@@ -66,11 +66,15 @@ It should look close to:
 
 #### Install
 
-When using the tool for the first time, steam ask you to login
-and provide the 2FA code. That's because the Last Oasis server can not yet be downloaded
-anonymously.
+The Last Oasis dedicated server (Steam App ID `920720`) can be downloaded
+anonymously — `STEAM_USER` defaults to `anonymous`, so no Steam account or
+2FA is required.
 
-**IMPORTANT:** Whenever an unknown tool ask you for your password, check the source! Fight scamming and phishing!
+If you need to use a personal Steam account (e.g. to pin a specific build),
+set `STEAM_USER` and run `login` once interactively to provide the password
+and 2FA code.
+
+**IMPORTANT:** Whenever an unknown tool asks you for your password, check the source! Fight scamming and phishing!
 
 ```shell
 ./last-oasis install
@@ -145,11 +149,15 @@ It should look close to:
 
 #### Install
 
-When using the tool for the first time, steam ask you to login
-and provide the 2FA code. That's because the Last Oasis server can not yet be downloaded
-anonymously.
+The Last Oasis dedicated server (Steam App ID `920720`) can be downloaded
+anonymously — `STEAM_USER` defaults to `anonymous`, so no Steam account or
+2FA is required.
 
-**IMPORTANT:** Whenever an unknown tool ask you for your password, check the source! Fight scamming and phishing!
+If you need to use a personal Steam account (e.g. to pin a specific build),
+set `STEAM_USER` and run `login` once interactively to provide the password
+and 2FA code.
+
+**IMPORTANT:** Whenever an unknown tool asks you for your password, check the source! Fight scamming and phishing!
 
 ```shell
 ./last-oasis-docker install
@@ -315,8 +323,10 @@ Then open `docker-compose.yml` and replace every `<REPLACE_*>` placeholder:
 | `<REPLACE_CUSTOMER_KEY>` | myrealm.lastoasis.gg → Settings → "Game server registration key" |
 | `<REPLACE_PROVIDER_KEY>` | myrealm.lastoasis.gg → Settings → "Self hosted game servers registration keys" |
 | `<REPLACE_EXTERNAL_IP>` | Public IPv4 of your host |
-| `<REPLACE_STEAM_USERNAME>` | Steam account that owns Last Oasis |
 | `<REPLACE_SERVER_NAME>` | Anything unique within the realm (e.g. `oasis-01`) |
+
+The dedicated server downloads anonymously, so no Steam credentials are
+required — `STEAM_USER` defaults to `anonymous`.
 
 The template is pre-tuned to:
 
@@ -329,11 +339,15 @@ Make sure those ports are open on your firewall / router.
 
 #### Install
 
-When using the tool for the first time, steam ask you to login
-and provide the 2FA code. That's because the Last Oasis server can not yet be downloaded
-anonymously.
+The Last Oasis dedicated server (Steam App ID `920720`) can be downloaded
+anonymously — `STEAM_USER` defaults to `anonymous`, so no Steam account or
+2FA is required.
 
-**IMPORTANT:** Whenever an unknown tool ask you for your password, check the source! Fight scamming and phishing!
+If you need to use a personal Steam account (e.g. to pin a specific build),
+set `STEAM_USER` and run `login` once interactively to provide the password
+and 2FA code.
+
+**IMPORTANT:** Whenever an unknown tool asks you for your password, check the source! Fight scamming and phishing!
 
 ```shell
 ./last-oasis-compose login

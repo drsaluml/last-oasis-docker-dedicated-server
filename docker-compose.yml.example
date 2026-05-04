@@ -20,7 +20,8 @@ x-service-template: &service-template
 #   SERVER_PROVIDER_KEY: 6fSIs5nTwnhfjcaVlZ5BmA
 #   SERVER_IP_ADDRESS: 233.252.0.98
 #   SERVER_SLOTS: 25
-#   STEAM_USER: FancyAlice
+#   # STEAM_USER defaults to "anonymous"; override only for a personal
+#   # Steam account (e.g. STEAM_USER: FancyAlice)
 
 services:
   # @note Don't remove this service. The `maintenance` service is used

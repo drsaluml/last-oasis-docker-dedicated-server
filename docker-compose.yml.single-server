@@ -6,15 +6,16 @@
 # Usage:
 #   cp docker-compose.yml.single-server docker-compose.yml
 #   # edit docker-compose.yml and replace every <REPLACE_*> placeholder
-#   ./last-oasis-compose login    # one-time Steam auth (2FA)
-#   ./last-oasis-compose install  # download game files into the volume
+#   ./last-oasis-compose install  # download game files into the volume (anonymous)
 #   ./last-oasis-compose up       # start the server
 
 x-environment-template: &environment-template
   SERVER_CUSTOMER_KEY: "<REPLACE_CUSTOMER_KEY>"
   SERVER_PROVIDER_KEY: "<REPLACE_PROVIDER_KEY>"
   SERVER_IP_ADDRESS:   "<REPLACE_EXTERNAL_IP>"
-  STEAM_USER:          "<REPLACE_STEAM_USERNAME>"
+  # STEAM_USER defaults to "anonymous"; override only if you must use
+  # a personal Steam account.
+  # STEAM_USER:        "<your-steam-username>"
 
 x-service-template: &service-template
   # Use the published image. Switch to `build: .` to build locally instead.

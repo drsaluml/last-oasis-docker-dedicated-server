@@ -83,8 +83,10 @@ ${bold}ENVIRONMENT VARIABLES: (@todo)
     ${underscore}STEAM_LINUX_APP_ID${normal}      [optional]
       Dedicated last oasis server steam appid for linux. (Default: "903950")
 
-    ${underscore}STEAM_USER${normal}              (overwritten by '-u' option) ${bold}[*required]${normal}
-      Steam user name to login with.
+    ${underscore}STEAM_USER${normal}              (overwritten by '-u' option) [optional]
+      Steam user name to login with. Last Oasis dedicated server (App ID 920720)
+      can be downloaded anonymously, so this defaults to "anonymous".
+      Override only if you need to use a personal Steam account.
 
 ${bold}EXAMPLES
   ${normal}# Login as steam user "bob"

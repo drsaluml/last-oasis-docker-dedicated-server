@@ -82,6 +82,16 @@ anonymously.
 ./last-oasis run
 ```
 
+#### Backup
+
+Create a tarball of the save data (`Mist/Saved/`) under `$INSTALL_DIR/backups`:
+
+```shell
+./last-oasis backup
+```
+
+Override the destination via the `BACKUP_DIR` env var.
+
 #### Help
 
 ```shell
@@ -151,11 +161,40 @@ anonymously.
 ./last-oasis-docker run
 ```
 
+#### Logs
+
+Tail the latest entries from `Mist.log` inside the volume:
+
+```shell
+./last-oasis-docker logs
+```
+
+#### Backup
+
+Create a tarball of the save data into `./backups` on the host:
+
+```shell
+./last-oasis-docker backup
+```
+
+Override the destination via the `HOST_BACKUP_DIR` env var.
+
 #### Help
 
 ```shell
 ./last-oasis-docker help
 ```
+
+#### Pre-built image
+
+A pre-built image is available on GitHub Container Registry — pull a
+released version instead of building locally:
+
+```shell
+docker pull ghcr.io/drsaluml/last-oasis-docker-dedicated-server:latest
+```
+
+Tags follow [SemVer](https://semver.org/) (e.g. `1.2.3`, `1.2`, `latest`).
 
 ---
 
@@ -282,11 +321,59 @@ anonymously.
 ./last-oasis-compose down
 ```
 
+#### Logs
+
+Tail combined logs from all services:
+
+```shell
+./last-oasis-compose logs
+```
+
+#### Backup
+
+Create a tarball of the save data via the `maintenance` service:
+
+```shell
+./last-oasis-compose backup
+```
+
 #### Help
 
 ```shell
 ./last-oasis-compose help
 ```
+
+---
+
+## Docker image releases
+
+The Docker image is built and published to GitHub Container Registry by
+[`.github/workflows/docker-publish.yml`](.github/workflows/docker-publish.yml)
+**only when a SemVer tag is pushed** (`v1.2.3`).
+
+To cut a new release:
+
+```shell
+git tag v1.2.3
+git push origin v1.2.3
+```
+
+The workflow will build and push three tags:
+
+- `ghcr.io/drsaluml/last-oasis-docker-dedicated-server:1.2.3`
+- `ghcr.io/drsaluml/last-oasis-docker-dedicated-server:1.2`
+- `ghcr.io/drsaluml/last-oasis-docker-dedicated-server:latest`
+
+The workflow can also be triggered manually via *Actions → Build and
+publish Docker image → Run workflow*.
+
+## Healthcheck
+
+The Docker image ships with a Steam A2S query healthcheck that pings
+the configured `SERVER_QUERY_PORT`. Containers running the `run`
+command will be marked **unhealthy** if the server hangs but keeps the
+process alive — pair this with `restart: always` (already set in the
+compose template) so Docker will recycle a stuck server.
 
 ---
 

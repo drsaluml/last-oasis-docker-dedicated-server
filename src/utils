@@ -47,19 +47,36 @@ provide_linux_app_id(){
 }
 
 # UE4 dedicated servers built with the Steam SDK dlopen
-# steamclient.so from $HOME/.steam/sdk64 (and sdk32). steamcmd drops
-# the .so under $HOME/.steam/steamcmd/linuxNN/, so we create the
-# symlinks the engine expects. Idempotent — safe to run on every start.
+# steamclient.so from $HOME/.steam/sdk{32,64}/. steamcmd drops the
+# runtime under different paths depending on its version, so we
+# search the known locations and symlink the first one that exists.
 ensure_steamclient_link(){
   for arch in 32 64; do
     local link="$HOME/.steam/sdk${arch}/steamclient.so"
-    local target="$HOME/.steam/steamcmd/linux${arch}/steamclient.so"
-    if [ ! -e "$target" ]; then
+
+    # Already set up — skip.
+    if [ -e "$link" ]; then
       continue
     fi
-    if [ -L "$link" ] && [ "$(readlink "$link")" = "$target" ]; then
+
+    local target=""
+    for candidate in \
+      "$HOME/.steam/steamcmd/linux${arch}/steamclient.so" \
+      "$HOME/Steam/steamcmd/linux${arch}/steamclient.so" \
+      "$HOME/.steam/steam/linux${arch}/steamclient.so" \
+      "$HOME/.steam/Steam/linux${arch}/steamclient.so" \
+      "/home/steam/linux${arch}/steamclient.so"; do
+      if [ -e "$candidate" ]; then
+        target="$candidate"
+        break
+      fi
+    done
+
+    if [ -z "$target" ]; then
+      echo "[WARN] steamclient.so for linux${arch} not found in any expected path"
       continue
     fi
+
     mkdir -p "$(dirname "$link")"
     ln -sfT "$target" "$link"
     echo "[LINK] $link -> $target"

@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 login(){
-  run "$STEAM_CMD_BINARY +login $STEAM_USER +quit"
+  run "$STEAM_CMD_BINARY \
+    +@ShutdownOnFailedCommand 1 \
+    +@NoPromptForPassword 1 \
+    +login $STEAM_USER \
+    +quit"
 }
 
 # Download and setup Last Oasis
@@ -19,7 +23,13 @@ download(){
     attempt=$((attempt + 1))
     info "Download attempt $attempt/$max"
 
+    # @ShutdownOnFailedCommand 1: exit non-zero if any step fails so
+    #   our retry loop can react instead of seeing a misleading exit 0.
+    # @NoPromptForPassword 1: never block on an interactive prompt
+    #   when the credentials are wrong.
     if run "$STEAM_CMD_BINARY \
+      +@ShutdownOnFailedCommand 1 \
+      +@NoPromptForPassword 1 \
       +force_install_dir $INSTALL_DIR \
       +login $STEAM_USER \
       +app_license_request $STEAM_APP_ID \
@@ -90,6 +100,10 @@ start_server(){
   fi
 
   ensure_steamclient_link
+
+  # Help any libraries inside the engine that dlopen by name (not by
+  # absolute path) find steamclient.so without further symlinks.
+  export LD_LIBRARY_PATH="$HOME/.steam/sdk64:$HOME/.steam/sdk32:${LD_LIBRARY_PATH:-}"
 
   run "${SERVER_BINARY_PATH}MistServer-Linux-Shipping \
     $SERVER_OPTIONS \

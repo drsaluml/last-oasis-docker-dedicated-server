@@ -1,0 +1,60 @@
+# Daily backup of the save data into /mnt/steam/backups (same PVC).
+# Tarballs accumulate forever — add a separate cleanup CronJob or
+# rotate them out-of-band if disk usage matters.
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: last-oasis-1-backup
+  namespace: last-oasis
+spec:
+  schedule: "0 3 * * *"      # daily at 03:00 server time
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      ttlSecondsAfterFinished: 86400
+      template:
+        spec:
+          restartPolicy: OnFailure
+          nodeSelector:
+            oasis: last-oasis-1
+
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1001
+            fsGroup: 1001
+
+          containers:
+            - name: backup
+              image: ghcr.io/drsaluml/last-oasis-docker-dedicated-server:latest
+              imagePullPolicy: IfNotPresent
+
+              args:
+                - backup
+
+              env:
+                - name: HOME
+                  value: /home/steam
+                - name: BACKUP_DIR
+                  value: /mnt/steam/backups
+
+              envFrom:
+                - secretRef:
+                    name: last-oasis-1-secret
+
+              resources:
+                requests:
+                  cpu: "200m"
+                  memory: "256Mi"
+
+              volumeMounts:
+                - name: data
+                  mountPath: /mnt/steam
+
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: last-oasis-1-data

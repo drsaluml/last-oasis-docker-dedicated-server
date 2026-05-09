@@ -26,8 +26,10 @@
 ## Optional ##
 ##############
 
-# Directory where to install Last Oasis. (Default: ".steam/last-oasis")
-# INSTALL_DIR=".steam/last-oasis"
+# Directory where to install Last Oasis.
+# (Default in Docker: "/mnt/steam/last-oasis";
+#  Default on host:   "$HOME/.steam/last-oasis")
+# INSTALL_DIR="/mnt/steam/last-oasis"
 
 # Additional server options to use.
 # SERVER_OPTIONS='-log -force_steamclient_link -messaging -NoLiveServer -EnableCheats -backendapiurloverride="backend.last-oasis.com"'

@@ -41,8 +41,10 @@ ${bold}ENVIRONMENT VARIABLES: (@todo)
 
   The following environment variables are available:
 
-    ${underscore}INSTALL_DIR${normal}             (overwritten by '-i' option) [optional]
-      Directory where to install Last Oasis. (Default: ".steam/last-oasis")
+    ${underscore}INSTALL_DIR${normal}             (overwritten by '-d' option) [optional]
+      Directory where to install Last Oasis.
+      (Default in Docker: "/mnt/steam/last-oasis";
+       Default on host:   "\$HOME/.steam/last-oasis")
 
     ${underscore}SERVER_BINARY_PATH${normal}      [optional]
       Path of linux server binary.

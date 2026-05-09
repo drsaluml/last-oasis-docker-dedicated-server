@@ -38,9 +38,6 @@ spec:
             - -c
             - |
               set -eu
-              mkdir -p /mnt/steam/Steam \
-                       /mnt/steam/.steam \
-                       /mnt/steam/.steam/last-oasis
               chown -R 1000:1001 /mnt/steam
               chmod -R 775 /mnt/steam
           volumeMounts:
@@ -60,8 +57,6 @@ spec:
               type: Unconfined
 
           env:
-            - name: HOME
-              value: /home/steam
             # Anonymous downloads frequently fail the first attempt;
             # the wrapper retries with backoff. Bump for slower nodes.
             - name: DOWNLOAD_MAX_ATTEMPTS

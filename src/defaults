@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
-INSTALL_DIR="${INSTALL_DIR:-$(realpath ~/.steam)/last-oasis}"
+# Inside the container the volume is mounted at /mnt/steam, so we
+# install the game directly into /mnt/steam/last-oasis (no nested
+# `.steam/` layer). On a host install we fall back to $HOME/.steam/
+# last-oasis to match the conventional Steam location.
+if [ -n "$IN_DOCKER" ]; then
+  INSTALL_DIR="${INSTALL_DIR:-/mnt/steam/last-oasis}"
+else
+  INSTALL_DIR="${INSTALL_DIR:-${HOME}/.steam/last-oasis}"
+fi
 
 SERVER_BINARY_PATH="$INSTALL_DIR/Mist/Binaries/Linux/"
 SERVER_IDENTIFIER="${SERVER_IDENTIFIER:-MyLastOasisServer}"

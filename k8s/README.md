@@ -56,7 +56,7 @@ kubectl -n last-oasis logs -f deploy/last-oasis-1
 
 # Tail Mist.log inside the container
 kubectl -n last-oasis exec deploy/last-oasis-1 -- \
-  tail -f /mnt/steam/.steam/last-oasis/Mist/Saved/Logs/Mist.log
+  tail -f /mnt/steam/last-oasis/Mist/Saved/Logs/Mist.log
 
 # Open a shell
 kubectl -n last-oasis exec -it deploy/last-oasis-1 -- bash
@@ -121,10 +121,10 @@ warms up.
 
 ### `Redirecting stderr to '/nonexistent/Steam/logs/stderr.txt'`
 
-Image was built with `HOME` defaulted to `/nonexistent`. The manifests
-already set `HOME=/home/steam` as a fallback; if you see this with a
-freshly pulled image, your `imagePullPolicy: Always` is working but
-the registry has a stale build — push a new tag.
+Image was built with `HOME` defaulted to `/nonexistent`. Newer images
+ship with `ENV HOME=/mnt/steam` baked in, pointing straight at the
+volume mount. If you still see this, your registry has a stale build
+— push a new tag and let `imagePullPolicy: Always` pick it up.
 
 ### Pod restarts every few minutes despite the server running
 

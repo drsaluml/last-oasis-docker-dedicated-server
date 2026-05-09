@@ -43,14 +43,16 @@ RUN mkdir -p /mnt/steam
 RUN chown -R steam:steam /mnt/steam/
 VOLUME ["/mnt/steam/"]
 
+# Point HOME at the volume mount so steamcmd's defaults — $HOME/.steam
+# and $HOME/Steam — land directly inside the persistent volume. No
+# symlinks needed; steamcmd creates the subdirectories itself.
+#
+# Image-side files (scripts, steamcmd binary) still live in
+# /home/steam (WORKDIR below); only the per-install state is in HOME.
+ENV HOME=/mnt/steam
+
 USER steam
 WORKDIR /home/steam
-
-RUN mkdir /mnt/steam/Steam
-RUN mkdir /mnt/steam/.steam
-
-RUN ln -s /mnt/steam/Steam ./Steam
-RUN ln -s /mnt/steam/.steam ./.steam
 
 RUN curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
 

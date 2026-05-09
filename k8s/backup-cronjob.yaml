@@ -36,8 +36,6 @@ spec:
                 - backup
 
               env:
-                - name: HOME
-                  value: /home/steam
                 - name: BACKUP_DIR
                   value: /mnt/steam/backups
 

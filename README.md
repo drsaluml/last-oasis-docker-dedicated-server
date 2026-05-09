@@ -34,6 +34,20 @@ docker compose down                     # stop
 The compose file is self-documenting — every command (update, backup,
 shell) is listed in its header comment.
 
+## Kubernetes
+
+Production-ready manifests live in [`k8s/`](k8s/) — see
+[`k8s/README.md`](k8s/README.md) for the full setup guide. The bundle
+includes:
+
+- A `Deployment` pinned to a specific node via a `oasis=<name>` label,
+  with `hostNetwork: true` so the game ports come straight off the
+  node's IP
+- An idempotent install `Job` that runs steamcmd against the PVC
+- A daily backup `CronJob`
+- Liveness / readiness / startup probes wired to the bundled Steam
+  A2S healthcheck
+
 ## Installation (full repo, for development or multi-server)
 
 Download this repository either via git:

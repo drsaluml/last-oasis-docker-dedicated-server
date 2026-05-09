@@ -6,6 +6,19 @@ ENV USER=steam
 ENV UID=1000
 ENV GID=1001
 
+# Install dependencies first — Ubuntu 24.04's minimal base does not
+# include the `adduser` package, so addgroup/adduser would fail with
+# "command not found" otherwise.
+RUN apt-get update -y \
+ && apt-get install -y --no-install-recommends \
+      adduser \
+      ca-certificates \
+      curl \
+      lib32gcc-s1 \
+      lib32stdc++6 \
+      python3-minimal \
+ && rm -rf /var/lib/apt/lists/*
+
 # Ubuntu 24.04 ships with a default `ubuntu` user/group at UID/GID 1000.
 # Remove it so we can claim UID 1000 for `steam` (matches existing
 # named volumes built on earlier base images).
@@ -23,15 +36,6 @@ RUN adduser \
     --system \
     --uid "$UID" \
     "$USER"
-
-RUN apt-get update -y \
- && apt-get install -y --no-install-recommends \
-      ca-certificates \
-      curl \
-      lib32gcc-s1 \
-      lib32stdc++6 \
-      python3-minimal \
- && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /mnt/steam
 RUN chown -R steam:steam /mnt/steam/

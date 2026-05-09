@@ -46,11 +46,33 @@ provide_linux_app_id(){
   run "echo $STEAM_LINUX_APP_ID > ${SERVER_BINARY_PATH}steam_appid.txt"
 }
 
+# UE4 dedicated servers built with the Steam SDK dlopen
+# steamclient.so from $HOME/.steam/sdk64 (and sdk32). steamcmd drops
+# the .so under $HOME/.steam/steamcmd/linuxNN/, so we create the
+# symlinks the engine expects. Idempotent — safe to run on every start.
+ensure_steamclient_link(){
+  for arch in 32 64; do
+    local link="$HOME/.steam/sdk${arch}/steamclient.so"
+    local target="$HOME/.steam/steamcmd/linux${arch}/steamclient.so"
+    if [ ! -e "$target" ]; then
+      continue
+    fi
+    if [ -L "$link" ] && [ "$(readlink "$link")" = "$target" ]; then
+      continue
+    fi
+    mkdir -p "$(dirname "$link")"
+    ln -sfT "$target" "$link"
+    echo "[LINK] $link -> $target"
+  done
+}
+
 # Start a single server
 start_server(){
   if [ -n "$SERVER_SLOTS" ] && [ "$SERVER_SLOTS" -gt 100 ] 2>/dev/null; then
     echo "[WARNING] SERVER_SLOTS=$SERVER_SLOTS exceeds the recommended max of 100"
   fi
+
+  ensure_steamclient_link
 
   run "${SERVER_BINARY_PATH}MistServer-Linux-Shipping \
     $SERVER_OPTIONS \

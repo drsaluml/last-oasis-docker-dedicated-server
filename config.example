@@ -55,3 +55,7 @@
 # Host directory used by `last-oasis-docker backup`. (Default: "$(pwd)/backups")
 # HOST_BACKUP_DIR="/path/to/backups"
 
+# How many times to retry steamcmd download on transient "Missing
+# configuration" errors. Backoff is 5s, 10s, 15s, ... (Default: 5)
+# DOWNLOAD_MAX_ATTEMPTS="5"
+

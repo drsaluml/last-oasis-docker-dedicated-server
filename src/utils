@@ -5,14 +5,38 @@ login(){
 }
 
 # Download and setup Last Oasis
+#
+# Retries on transient steamcmd "Missing configuration" failures, which
+# happen when Steam's CMS hasn't propagated the anonymous license cache
+# yet. Tunable via DOWNLOAD_MAX_ATTEMPTS (default: 5).
 download(){
   info "Download Last Oasis"
 
-  run "$STEAM_CMD_BINARY \
-    +force_install_dir $INSTALL_DIR \
-    +login $STEAM_USER \
-    +app_update $STEAM_APP_ID validate \
-    +quit"
+  local attempt=0
+  local max="${DOWNLOAD_MAX_ATTEMPTS:-5}"
+
+  while [ "$attempt" -lt "$max" ]; do
+    attempt=$((attempt + 1))
+    info "Download attempt $attempt/$max"
+
+    if run "$STEAM_CMD_BINARY \
+      +force_install_dir $INSTALL_DIR \
+      +login $STEAM_USER \
+      +app_license_request $STEAM_APP_ID \
+      +app_update $STEAM_APP_ID validate \
+      +quit"; then
+      return 0
+    fi
+
+    if [ "$attempt" -lt "$max" ]; then
+      local backoff=$((attempt * 5))
+      info "steamcmd failed; retrying in ${backoff}s..."
+      sleep "$backoff"
+    fi
+  done
+
+  echo "[ERROR] download failed after $max attempts"
+  return 1
 }
 
 # Provide correct steam app id to use for linux

@@ -1,10 +1,16 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 ENV IN_DOCKER=1
 
 ENV USER=steam
 ENV UID=1000
 ENV GID=1001
+
+# Ubuntu 24.04 ships with a default `ubuntu` user/group at UID/GID 1000.
+# Remove it so we can claim UID 1000 for `steam` (matches existing
+# named volumes built on earlier base images).
+RUN userdel --remove ubuntu 2>/dev/null || true \
+ && groupdel ubuntu 2>/dev/null || true
 
 RUN addgroup \
     --system \
@@ -23,6 +29,7 @@ RUN apt-get update -y \
       ca-certificates \
       curl \
       lib32gcc-s1 \
+      lib32stdc++6 \
       python3-minimal \
  && rm -rf /var/lib/apt/lists/*
 

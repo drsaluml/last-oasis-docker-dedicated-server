@@ -35,6 +35,8 @@ RUN adduser \
     --ingroup "$USER" \
     --system \
     --uid "$UID" \
+    --home /home/"$USER" \
+    --shell /bin/bash \
     "$USER"
 
 RUN mkdir -p /mnt/steam
